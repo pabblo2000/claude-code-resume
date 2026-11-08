@@ -1,5 +1,3 @@
-work/
-.tectonic-cache/
 node_modules/
 .next/
 .vercel/

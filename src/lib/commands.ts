@@ -1,97 +1,76 @@
-import {CommandDefinition} from './types';
+interface CommandDefinition {
+  name: string;
+  aliases: string[];
+  description: string;
+  category: "content" | "system";
+}
 export const commands: CommandDefinition[] = [
   {
-    "name": "/help",
-    "aliases": [
-      "/h",
-      "/?"
-    ],
-    "description": "List available commands",
-    "category": "content"
+    name: "/help",
+    aliases: ["/h", "/?"],
+    description: "List available commands",
+    category: "content",
   },
   {
-    "name": "/about",
-    "aliases": [
-      "/summary",
-      "/whoami"
-    ],
-    "description": "Profile & current role",
-    "category": "content"
+    name: "/about",
+    aliases: ["/summary", "/whoami"],
+    description: "Profile & current role",
+    category: "content",
   },
   {
-    "name": "/experience",
-    "aliases": [
-      "/work",
-      "/exp"
-    ],
-    "description": "Work experience",
-    "category": "content"
+    name: "/experience",
+    aliases: ["/work", "/exp"],
+    description: "Work experience",
+    category: "content",
   },
   {
-    "name": "/skills",
-    "aliases": [
-      "/tech",
-      "/stack"
-    ],
-    "description": "Technical skills",
-    "category": "content"
+    name: "/skills",
+    aliases: ["/tech", "/stack"],
+    description: "Technical skills",
+    category: "content",
   },
   {
-    "name": "/projects",
-    "aliases": [
-      "/code"
-    ],
-    "description": "Projects & repositories",
-    "category": "content"
+    name: "/projects",
+    aliases: ["/code"],
+    description: "Projects & repositories",
+    category: "content",
   },
   {
-    "name": "/education",
-    "aliases": [
-      "/edu"
-    ],
-    "description": "Education",
-    "category": "content"
+    name: "/education",
+    aliases: ["/edu"],
+    description: "Education",
+    category: "content",
   },
   {
-    "name": "/certs",
-    "aliases": [
-      "/certifications"
-    ],
-    "description": "Certifications & training",
-    "category": "content"
+    name: "/certs",
+    aliases: ["/certifications"],
+    description: "Certifications & training",
+    category: "content",
   },
   {
-    "name": "/contact",
-    "aliases": [
-      "/links",
-      "/socials"
-    ],
-    "description": "Email & professional links",
-    "category": "content"
+    name: "/contact",
+    aliases: ["/links", "/socials"],
+    description: "Email & professional links",
+    category: "content",
   },
   {
-    "name": "/languages",
-    "aliases": [
-      "/lang"
-    ],
-    "description": "Languages",
-    "category": "content"
+    name: "/languages",
+    aliases: ["/lang"],
+    description: "Languages",
+    category: "content",
   },
   {
-    "name": "/resume",
-    "aliases": [
-      "/pdf",
-      "/download"
-    ],
-    "description": "Download original resume",
-    "category": "content"
+    name: "/resume",
+    aliases: ["/pdf", "/download"],
+    description: "Download original resume",
+    category: "content",
   },
   {
-    "name": "/clear",
-    "aliases": [],
-    "description": "Clear the terminal",
-    "category": "system"
-  }
+    name: "/clear",
+    aliases: [],
+    description: "Clear the terminal",
+    category: "system",
+  },
 ];
 
 export function findCommand(input: string): CommandDefinition | null {
@@ -105,14 +84,14 @@ export function findCommand(input: string): CommandDefinition | null {
 }
 
 export function fuzzyMatch(input: string): string | null {
-  const normalized = input.toLowerCase().replace('/', '');
+  const normalized = input.toLowerCase().replace("/", "");
   if (!normalized) return null;
 
   let bestMatch: string | null = null;
   let bestScore = Infinity;
 
   for (const cmd of commands) {
-    const cmdName = cmd.name.replace('/', '');
+    const cmdName = cmd.name.replace("/", "");
     // Simple: check if the input is a prefix or close enough
     if (cmdName.startsWith(normalized)) {
       const score = cmdName.length - normalized.length;
@@ -133,8 +112,11 @@ export function fuzzyMatch(input: string): string | null {
 }
 
 function levenshtein(a: string, b: string): number {
-  const m = a.length, n = b.length;
-  const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  const m = a.length,
+    n = b.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, () =>
+    Array(n + 1).fill(0),
+  );
   for (let i = 0; i <= m; i++) dp[i][0] = i;
   for (let j = 0; j <= n; j++) dp[0][j] = j;
   for (let i = 1; i <= m; i++) {

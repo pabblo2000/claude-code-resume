@@ -122,29 +122,19 @@
         "name": "YouTube Data Scraper & Analyzer",
         "description": "pipeline de API y scraping con análisis de sentimiento y engagement",
         "url": "https://github.com/pabblo2000/YouTubeAnalizer",
-        "tags": [
-          "Python",
-          "API",
-          "NLP"
-        ]
+        "tags": ["Python", "API", "NLP"]
       },
       {
         "name": "Wine Quality Prediction",
         "description": "ML supervisado con feature engineering y validación cruzada",
         "url": "https://github.com/pabblo2000/WinePredictions",
-        "tags": [
-          "Python",
-          "ML"
-        ]
+        "tags": ["Python", "ML"]
       },
       {
         "name": "Time-Series Interpolation Library",
         "description": "librería Python para valores faltantes en series temporales",
         "url": "https://github.com/pabblo2000",
-        "tags": [
-          "Python",
-          "Time series"
-        ]
+        "tags": ["Python", "Time series"]
       }
     ],
     "languages": "Español (nativo), Inglés (C1, certificado Cambridge), Alemán (A2)"
@@ -272,29 +262,19 @@
         "name": "YouTube Data Scraper & Analyzer",
         "description": "API + scraping pipeline with sentiment and engagement analysis",
         "url": "https://github.com/pabblo2000/YouTubeAnalizer",
-        "tags": [
-          "Python",
-          "API",
-          "NLP"
-        ]
+        "tags": ["Python", "API", "NLP"]
       },
       {
         "name": "Wine Quality Prediction",
         "description": "Supervised ML with feature engineering and cross-validation",
         "url": "https://github.com/pabblo2000/WinePredictions",
-        "tags": [
-          "Python",
-          "ML"
-        ]
+        "tags": ["Python", "ML"]
       },
       {
         "name": "Time-Series Interpolation Library",
         "description": "Python library for missing values in time series",
         "url": "https://github.com/pabblo2000",
-        "tags": [
-          "Python",
-          "Time series"
-        ]
+        "tags": ["Python", "Time series"]
       }
     ],
     "languages": "Spanish (Native), English (C1, Cambridge Certified), German (A2)"
