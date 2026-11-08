@@ -1,39 +1,44 @@
-# CV de Pablo Álvaro Hidalgo
+# Pablo Álvaro Hidalgo — CV & Terminal
 
-Versiones ES y EN orientadas a BI y Analytics Engineering. Revisión: 2026-11-08.
+Frontend bilingüe para Vercel basado en los CV **originales** ES y EN. Adaptación de [Claude Resume](https://github.com/ambaena/claude-code-resume), de Alfonso Baena, con su historial y licencia MIT conservados. Portada clásica en `/` y terminal en `/terminal`.
 
-## Archivos
+## CV y copias de seguridad
 
-- `Docs/archive/2026-11-08-original/`: copias exactas de los cuatro originales, sin cambios.
-- `Docs/src/CV-ES.tex` y `CV-EN.tex`: nuevas fuentes LaTeX.
-- `Docs/pdf/`: nuevos PDF compilados.
-- Los cuatro archivos originales de `Docs/` se conservan también en su ubicación inicial.
-- `work/`: herramientas portátiles, compilaciones intermedias y revisión visual; ignorado por Git.
+- `Docs/CV ES - Pablo Álvaro Hidalgo.*` y `Docs/CV EN - Pablo Álvaro Hidalgo.*`: originales intactos.
+- `Docs/src/CV-ES.tex`, `CV-EN.tex` y `Docs/pdf/`: restaurados a los originales.
+- `Docs/archive/2026-11-08-original/`: copia de seguridad original.
+- `Docs/archive/2026-11-08-revision/`: revisión descartada, conservada por si se quiere recuperar.
+- `public/cv/`: los PDF originales que descarga la web.
+- `src/data/resumes.json`: contenido ES/EN extraído de los LaTeX originales; fuente compartida de portada y terminal.
 
-## Compilar
-
-Con Tectonic disponible en PATH, desde la raíz:
+## Desarrollo
 
 ```powershell
-tectonic --outdir Docs/pdf Docs/src/CV-ES.tex
-tectonic --outdir Docs/pdf Docs/src/CV-EN.tex
+pnpm install
+pnpm dev
 ```
 
-También se puede compilar con pdfLaTeX o importar los `.tex` en Overleaf.
+Abrir la dirección local indicada por Next.js. Cambiar idioma con ES/EN; `?lang=en` permite compartir la versión inglesa.
 
-## Criterio editorial
+```powershell
+pnpm typecheck
+pnpm build
+pnpm start
+```
 
-- Cargos y fechas originales conservados; titular orientado a BI y Analytics.
-- Prioridad a SQL, Spark SQL, Databricks, Power BI y necesidades comerciales.
-- AWS descrito como certificación y conocimiento teórico; Airflow en aprendizaje y PySpark básico.
-- Sin atribuir creación de tablas/vistas persistentes, operación de pipelines ni ahorros no confirmados.
-- Reducción de afirmaciones de automatización y separación entre certificación y formación.
-- Fuera del CV actual: intercambio escolar, herramientas secundarias y detalles que dispersaban el enfoque. Permanecen en el archivo original.
+## Funcionalidad
 
-## Pendiente de confirmar
+- Navegación por secciones, enlaces profesionales, copia del email y descarga del CV por idioma.
+- Comandos `/help`, `/about`, `/experience`, `/skills`, `/projects`, `/education`, `/certs`, `/contact`, `/languages`, `/resume`, `/clear` y alias.
+- Historial ↑/↓, autocompletado Tab y botones para móvil. Los comandos funcionan sin IA ni claves.
+- Chat opcional con Groq, desactivado mientras no haya `GROQ_API_KEY`; nunca se simulan respuestas de IA.
+- La clave vive en el servidor. Si se activa el chat público, configurar cuotas del proveedor y protección de tráfico en Vercel. El plan gratuito del proveedor tiene límites; no es un servicio ilimitado.
+- El proyecto de interpolación enlaza al perfil de GitHub porque aún no se ha identificado un repositorio directo.
 
-- Enlaces directos de los tres proyectos: no se han inventado URLs. El encabezado enlaza al perfil de GitHub.
-- Ejemplos y alcance concreto de SQL y Power BI, métricas de impacto y uso profesional de Python.
-- Credenciales verificables de AWS, Snowflake y cursos.
+## GitHub y Vercel
 
-El repositorio es local. No se ha publicado en GitHub, creado el fork ni desplegado la web.
+`upstream` apunta al repositorio original. El historial original está integrado en el repositorio local. El fork remoto en la cuenta del usuario requiere una sesión autenticada de GitHub; no se ha publicado el código ni los datos personales durante el desarrollo local.
+
+Una vez creado el fork remoto y subidos los cambios, importar el repositorio en Vercel como proyecto Next.js; usar `pnpm install --frozen-lockfile` y `pnpm build`. No hace falta dominio propio. Variables opcionales: copiar los nombres de `.env.example` a Vercel y configurar la URL pública. Nunca subir `.env.local`.
+
+El contenido publicado corresponde a los CV originales, por petición del usuario, sin incorporar la revisión editorial posterior.

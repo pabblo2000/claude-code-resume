@@ -1,17 +1,16 @@
-# Local tools, caches and scratch work
 work/
 .tectonic-cache/
-# LaTeX intermediates (keep deliverable PDFs)
-*.aux
-*.log
-*.out
-*.toc
-*.fls
-*.fdb_latexmk
-*.synctex.gz
-# Future website dependencies, builds and credentials
 node_modules/
 .next/
 .vercel/
 .env*
 !.env.example
+*.tsbuildinfo
+next-env.d.ts
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+.DS_Store

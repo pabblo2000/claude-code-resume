@@ -1,88 +1,214 @@
-\documentclass[a4paper,10pt]{article}
-\usepackage{iftex}
-\ifPDFTeX
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{tgheros}
-\renewcommand{\familydefault}{\sfdefault}
-\else
-\usepackage{fontspec}
-\setmainfont{texgyreheros-regular.otf}[BoldFont=texgyreheros-bold.otf,ItalicFont=texgyreheros-italic.otf,Ligatures=NoCommon]
-\fi
-\usepackage[spanish,es-noshorthands,es-nolists]{babel}
-\usepackage[margin=1.35cm]{geometry}
-\usepackage{enumitem,titlesec,xcolor,tabularx}
+%-------------------------
+% Resume in LaTeX (Spanish version)
+% Author : Pablo Alvaro Hidalgo
+% Target : Data & Digital Analyst
+%-------------------------
+
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
 \usepackage[hidelinks]{hyperref}
-\ifdefined\pdfgentounicode
-\input{glyphtounicode}
-\pdfgentounicode=1
-\fi
-\definecolor{accent}{HTML}{163B50}
-\pagestyle{empty}
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{0pt}
-\setlength{\tabcolsep}{0pt}
+\usepackage{fancyhdr}
+\usepackage[spanish,es-noshorthands,es-nolists]{babel}
+\usepackage{tabularx}
+\usepackage{fontawesome5}
+\usepackage[scale=0.90,lf]{FiraMono}
+
+\definecolor{light-grey}{gray}{0.83}
+\definecolor{dark-grey}{gray}{0.3}
+\definecolor{text-grey}{gray}{.08}
+
+\usepackage{tgheros}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage[T1]{fontenc}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{0in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.6in}
+\addtolength{\textheight}{1.1in}
+
+\urlstyle{same}
+\raggedbottom
 \raggedright
-\titleformat{\section}{\color{accent}\normalsize\bfseries}{}{0pt}{}[\vspace{-5pt}\rule{\linewidth}{0.5pt}]
-\titlespacing*{\section}{0pt}{6pt}{3pt}
-\linespread{0.96}
-\setlist[itemize]{leftmargin=12pt,topsep=1pt,itemsep=0pt,parsep=0pt,partopsep=0pt}
-\newcommand{\job}[4]{\textbf{#1}\hfill\textbf{\small #2}\\{\small #3\hfill #4}\par}
-\newcommand{\entry}[3]{\textbf{#1}\hfill{\small #3}\\#2\par\vspace{3pt}}
-\hypersetup{pdftitle={Pablo Álvaro Hidalgo - BI and Analytics},pdfauthor={Pablo Álvaro Hidalgo},pdfsubject={BI, SQL, Power BI, Analytics Engineering}}
+\setlength{\tabcolsep}{0in}
+
+% Section style
+\titleformat{\section}{
+    \bfseries \vspace{0pt} \raggedright \large
+}{}{0em}{}[\color{light-grey} {\titlerule[2pt]} \vspace{-4pt}]
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & {\color{dark-grey}\small #2}\vspace{1pt}\\
+      \textit{#3} & {\color{dark-grey}\small #4}\\
+    \end{tabular*}\vspace{-5pt}
+}
+
+% One-line certification: name | issuer | date
+\newcommand{\resumeCert}[3]{
+  \item
+    \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+      \small\textbf{#1} {\color{dark-grey}\small | #2} & {\color{dark-grey}\small #3}\\
+    \end{tabular*}\vspace{-6pt}
+}
+
+% One-line project: title | description | link
+\newcommand{\resumeProject}[3]{
+  \item
+    \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+      \small\textbf{#1}{\small: #2} & {\color{dark-grey}\small #3}\\
+    \end{tabular*}\vspace{-6pt}
+}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[itemsep=0pt]}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-2pt}}
+
+\color{text-grey}
+
+%-------------------------------------------
 \begin{document}
-{\LARGE\bfseries Pablo Álvaro Hidalgo}\\[3pt]
-{\large\color{accent} BI \& Analytics | SQL · Data Modeling · Databricks}\\[5pt]
-\small
-Madrid, España \enspace|\enspace +34 605 054 449 \enspace|\enspace \href{mailto:palvaroh2000@gmail.com}{palvaroh2000@gmail.com}\\[2pt]
-\href{https://www.linkedin.com/in/pabblo2000/}{linkedin.com/in/pabblo2000} \enspace|\enspace \href{https://github.com/pabblo2000}{github.com/pabblo2000}
-\normalsize
 
+%----------HEADING----------
+\begin{center}
+    \textbf{\Huge Pablo Alvaro Hidalgo} \\ \vspace{3pt}
+    \large Data \& Digital Analyst | Analytics Engineering \\ \vspace{4pt}
+    \small
+    \faPhone* \hspace{1pt}\texttt{+34 605 054 449} \hspace{2pt} $|$ \hspace{2pt}
+    \faEnvelope \hspace{1pt}\href{mailto:palvaroh2000@gmail.com}{\texttt{palvaroh2000@gmail.com}} \hspace{2pt} $|$ \hspace{2pt}
+    \faLinkedin \hspace{1pt}\href{https://www.linkedin.com/in/pabblo2000/}{\texttt{in/pabblo2000}} \hspace{2pt} $|$ \hspace{2pt}
+    \faGithub \hspace{1pt}\href{https://github.com/pabblo2000}{\texttt{pabblo2000}} \hspace{2pt} $|$ \hspace{2pt}
+    \faMapMarker* \hspace{1pt}\texttt{Madrid, España}
+\end{center}
+\vspace{-8pt}
+
+%-----------PROFILE-----------
 \section{PERFIL}
-Analista de datos con más de dos años de experiencia, especializado en BI y análisis comercial. Actualmente CRM Data Analyst en Ryanair: consultas complejas en SQL y Spark SQL sobre Databricks, Power BI avanzado y reporting para dirección. Combino comprensión del negocio y del grano de los datos con formación en ingeniería de datos. Certificado AWS Certified Data Engineer -- Associate, con orientación hacia Analytics Engineering.
+\small{
+Data Analyst con más de 2 años de experiencia y una sólida base en ingeniería de datos, con un perfil entre la analítica y el analytics engineering: desde el modelado y la transformación del dato hasta los dashboards y los insights de negocio.
+Actualmente \textbf{CRM Data Analyst} en el equipo de Insights de Ryanair, responsable del reporting diario de revenue y reclamaciones para el \textbf{CMO}, con uso diario de \textbf{Databricks} (SQL, notebooks) y \textbf{Power BI} sobre datos de clientes, campañas y canales digitales, y experiencia práctica en \textbf{A/B testing}, \textbf{GA4 en BigQuery}, automatización y plataformas cloud (\textbf{AWS Certified Data Engineer}, Snowflake).
+Inglés fluido (\textbf{C1, Cambridge}), grado impartido en inglés e \textbf{intercambio académico de un curso completo} en EE.\,UU.
+}
+\vspace{-4pt}
 
+%-----------EXPERIENCE-----------
 \section{EXPERIENCIA}
-\job{Ryanair}{Mar 2025 -- Actualidad}{CRM Data Analyst | Insights}{Madrid, España}
-\begin{itemize}
-\item Desarrollo de consultas complejas en \textbf{SQL y Spark SQL sobre Databricks} para analizar clientes, reservas y campañas CRM, teniendo en cuenta el grano de los datos.
-\item Desarrollo de \textbf{dashboards en Power BI} y colaboración con marketing, comercial y pricing en la definición de KPIs y necesidades de reporting.
-\item Responsable del reporting diario de ingresos y reclamaciones de pasajeros (EU261) para el \textbf{CMO}, con foco en rendimiento comercial y exposición a compensaciones.
-\item Diseño y evaluación de \textbf{tests A/B} en campañas CRM y traducción de los resultados en recomendaciones de negocio.
-\end{itemize}
-\job{Minsait (Grupo Indra)}{Feb 2025 -- Mar 2025}{Consultor Analista}{Madrid, España}
-\begin{itemize}
-\item Desarrollo de una herramienta interna de generación de propuestas comerciales y diseño de modelos semánticos de datos para sistemas de cliente.
-\end{itemize}
-\job{Panoram Hotel Management}{Sep 2024 -- Feb 2025}{Analista de Datos y BI (Prácticas)}{Madrid, España}
-\begin{itemize}
-\item Apoyo al Director de Estrategia Comercial y BI mediante dashboards ejecutivos de \textbf{Power BI} y reporting para dirección y RR.\,HH.
-\item Desarrollo de modelos de previsión de ocupación e ingresos con \textbf{SARIMAX y XGBoost} para apoyar la planificación comercial.
-\item Participación en iniciativas de estandarización y calidad del dato para mejorar la fiabilidad del reporting.
-\end{itemize}
-\job{Mediapro}{Feb 2022 -- Ago 2022}{Becario de ADE | Finanzas y Control de Gestión}{Madrid, España}
-\begin{itemize}
-\item Apoyo en facturación, seguimiento de costes y cierres mensuales con SAP; informes y conciliaciones en Excel.
-\end{itemize}
+  \resumeSubHeadingListStart
 
-\section{COMPETENCIAS TÉCNICAS}
-\textbf{BI y SQL:} Power BI (avanzado), DAX, Power Query (M), SQL (avanzado), Spark SQL, Databricks.\\
-\textbf{Datos y programación:} Python (pandas, NumPy, scikit-learn), grano y modelado de datos, Git.\\
-\textbf{Analítica:} KPIs comerciales, tests A/B, GA4 / BigQuery, forecasting, APIs REST y web scraping.\\
-\textbf{Cloud y formación:} AWS (S3, Glue, Lambda, Redshift; conocimientos teóricos), Snowflake (formación práctica); Airflow (en aprendizaje), PySpark (básico).
+    \resumeSubheading
+      {Ryanair}{Mar 2025 -- Actualidad}
+      {CRM Data Analyst | Insights}{Madrid, España}
+      \resumeItemListStart
+        \resumeItem{Responsable del \textbf{reporting diario de revenue y reclamaciones de pasajeros (EU261)} enviado directamente al \textbf{CMO}, ofreciendo una visión diaria del rendimiento comercial y de la exposición a compensaciones.} % TODO: if this report is automated, add "automatizado en Databricks + Power BI"
+        \resumeItem{Análisis de datos de clientes, reservas y campañas CRM a gran escala en \textbf{Databricks} (SQL, notebooks) para impulsar el engagement de clientes y las decisiones comerciales.}
+        \resumeItem{Diseño y evaluación de \textbf{A/B tests} sobre campañas CRM y palancas comerciales, traduciendo los resultados en recomendaciones adoptadas por el negocio.} % TODO: add an example or impact
+        \resumeItem{Desarrollo de lógica de transformación SQL modular y reutilizable y de controles de calidad del dato que alimentan el reporting, aportando un enfoque de analytics engineering al equipo de Insights.}
+        \resumeItem{Desarrollo y automatización de dashboards en \textbf{Power BI} sobre Databricks, reduciendo carga manual y tiempos de entrega, y colaboración con marketing, comercial y pricing en la definición de KPIs.} % TODO: e.g. "de X horas a Y minutos por semana"
+      \resumeItemListEnd
 
+    % OPTIONAL: no gap between Panoram (Feb 2025) and Ryanair (Mar 2025), so this block can be deleted
+    \resumeSubheading
+      {Minsait (Grupo Indra)}{Feb 2025 -- Mar 2025}
+      {Consultor Analista}{Madrid, España}
+      \resumeItemListStart
+        \resumeItem{Desarrollo de una herramienta interna para automatizar la generación de propuestas comerciales y diseño de modelos semánticos de datos para sistemas de cliente.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Panoram Hotel Management}{Sep 2024 -- Feb 2025}
+      {Analista de Datos y BI (Prácticas)}{Madrid, España}
+      \resumeItemListStart
+        \resumeItem{Principal apoyo analítico del Director de Estrategia Comercial y BI en un portfolio hotelero multimarca.}
+        \resumeItem{Desarrollo de \textbf{modelos de forecasting} (SARIMAX, XGBoost) de ocupación e ingresos para la planificación comercial.}
+        \resumeItem{Liderazgo de iniciativas de estandarización y calidad del dato, mejorando la fiabilidad del reporting y el gobierno del dato.}
+        \resumeItem{Diseño de dashboards ejecutivos en Power BI y automatización de informes recurrentes para la dirección y RR.\,HH.}
+        % OPTIONAL: if your GA4 / BigQuery work happened here, add it:
+        % \resumeItem{Análisis del rendimiento web y del funnel de reservas con \textbf{datos de GA4 en BigQuery} para identificar palancas de conversión.}
+      \resumeItemListEnd
+
+    % TODO: confirm city and department
+    \resumeSubheading
+      {Mediapro}{Feb 2022 -- Ago 2022}
+      {Becario de ADE | Finanzas y Control de Gestión}{Madrid, España}
+      \resumeItemListStart
+        \resumeItem{Apoyo en facturación, seguimiento de costes y cierres mensuales, utilizando SAP en la operativa financiera diaria.}
+        \resumeItem{Elaboración de informes y conciliaciones en Excel para el equipo financiero.}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+%-----------SKILLS-----------
+\section{HABILIDADES}
+\small{
+\textbf{Plataformas de datos:} Databricks (SQL, Notebooks, Spark), Snowflake, BigQuery, AWS (S3, Glue, Lambda, Redshift) \\
+\textbf{Lenguajes:} SQL (avanzado), Python (pandas, NumPy, scikit-learn), DAX, Power Query (M) \\
+\textbf{BI y analítica de procesos:} Power BI, Tableau, Celonis (Process Mining), Excel (avanzado) \\
+\textbf{Analítica digital:} GA4 (export a BigQuery), A/B testing y experimentación, Web scraping, APIs REST \\
+\textbf{Analítica y ML:} Forecasting de series temporales (SARIMAX), XGBoost, Random Forest, Regresión \\
+\textbf{Ingeniería de datos:} Pipelines ETL/ELT, Modelado de datos, Calidad del dato, PostgreSQL, MySQL, MongoDB, Git \\
+\textbf{Idiomas:} Español (nativo), Inglés (C1, certificado Cambridge), Alemán (A2)
+}
+\vspace{-4pt}
+
+%-----------CERTIFICATIONS-----------
+\section{CERTIFICACIONES}
+  \resumeSubHeadingListStart
+    \resumeCert{AWS Certified Data Engineer (Associate)}{Amazon Web Services}{Abr 2026}
+    % Check: AWS Data Analytics Specialty was retired in Apr 2024. Listed as a course:
+    \resumeCert{Programa AWS Data Analytics (nivel Specialty)}{Experis}{May 2025}
+    \resumeCert{Snowflake Hands-On Essentials (Warehousing, Data Lake, Data Apps)}{Snowflake}{Abr 2025}
+    \resumeCert{CS50x y CS50AI}{Harvard University}{Feb 2025}
+  \resumeSubHeadingListEnd
+\vspace{-2pt}
+
+%-----------EDUCATION-----------
+\section{FORMACIÓN}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {EAE Business School}{2024 -- 2025}
+      {Máster en Big Data y Business Analytics}{Madrid, España}
+    \resumeSubheading
+      {Universidad Complutense de Madrid}{2018 -- 2022}
+      {Grado en Administración y Dirección de Empresas (impartido en inglés)}{Madrid, España}
+    \resumeSubheading
+      {Marietta High School}{2016 -- 2017}
+      {Programa de intercambio académico (curso completo)}{Marietta, Ohio, EE.\,UU.}
+  \resumeSubHeadingListEnd
+\vspace{-2pt}
+
+%-----------PROJECTS-----------
 \section{PROYECTOS}
-\textbf{YouTube Data Scraper \& Analyzer:} extracción mediante API y scraping; análisis de sentimiento y engagement.\\
-\textbf{Time-Series Interpolation Library:} librería Python para tratar valores faltantes en series temporales.\\
-\textbf{Wine Quality Prediction:} aprendizaje supervisado, ingeniería de variables y validación cruzada.
+  \resumeSubHeadingListStart
+    % TODO: replace the profile URL with each repository URL
+    \resumeProject{YouTube Data Scraper \& Analyzer}{pipeline de API y scraping con análisis de sentimiento y engagement}{\href{https://github.com/pabblo2000}{\faGithub}}
+    \resumeProject{Wine Quality Prediction}{ML supervisado con feature engineering y validación cruzada}{\href{https://github.com/pabblo2000}{\faGithub}}
+    \resumeProject{Time-Series Interpolation Library}{librería Python para valores faltantes en series temporales}{\href{https://github.com/pabblo2000}{\faGithub}}
+  \resumeSubHeadingListEnd
 
-\section{CERTIFICACIÓN Y FORMACIÓN COMPLEMENTARIA}
-\textbf{AWS Certified Data Engineer -- Associate} | Amazon Web Services \hfill Abr 2026\\
-\textbf{Programa AWS Data Analytics} | Experis \hfill May 2025\\
-\textbf{Snowflake Hands-On Essentials} | Warehousing, Data Lake, Data Apps \hfill Abr 2025\\
-\textbf{CS50x y CS50AI} | Harvard University \hfill Feb 2025
-
-\section{FORMACIÓN E IDIOMAS}
-\textbf{Máster en Big Data y Business Analytics} | EAE Business School \hfill 2024 -- 2025\\
-\textbf{Grado en ADE, impartido en inglés} | Universidad Complutense de Madrid \hfill 2018 -- 2022\\
-\textbf{Idiomas:} Español nativo · Inglés C1 (Cambridge) · Alemán A2.
 \end{document}

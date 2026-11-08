@@ -1,0 +1,187 @@
+{
+  "basics": {
+    "name": "Pablo Álvaro Hidalgo",
+    "label": "Data & Digital Analyst | Analytics Engineering",
+    "email": "palvaroh2000@gmail.com",
+    "phone": "+34 605 054 449",
+    "url": "https://github.com/pabblo2000",
+    "summary": "Data Analyst with 2+ years of experience and a solid data engineering background, working between analytics and analytics engineering: from modelling and transforming data to delivering dashboards and business insights. Currently CRM Data Analyst in the Insights team at Ryanair, owning daily revenue and claims reporting for the CMO and working daily with Databricks (SQL, notebooks) and Power BI on customer, campaign and digital data, with hands-on experience in A/B testing, GA4 on BigQuery, automation and cloud platforms (AWS Certified Data Engineer, Snowflake). Fluent English (C1, Cambridge), degree taught in English and a full academic year exchange in the US.",
+    "location": {
+      "city": "Madrid",
+      "countryCode": "ES",
+      "region": "Madrid"
+    },
+    "profiles": [
+      {
+        "network": "GitHub",
+        "username": "pabblo2000",
+        "url": "https://github.com/pabblo2000"
+      },
+      {
+        "network": "LinkedIn",
+        "username": "pabblo2000",
+        "url": "https://www.linkedin.com/in/pabblo2000/"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "Ryanair",
+      "period": "Mar 2025 – Present",
+      "position": "CRM Data Analyst | Insights",
+      "location": "Madrid, Spain",
+      "highlights": [
+        "Own the daily revenue and EU261 passenger claims reporting delivered directly to the CMO, providing a daily view of commercial performance and compensation exposure.",
+        "Analyse large-scale customer, booking and CRM campaign data in Databricks (SQL, notebooks) to drive customer engagement and commercial decisions.",
+        "Design and evaluate A/B tests on CRM campaigns and commercial levers, translating results into recommendations adopted by the business.",
+        "Develop modular, reusable SQL transformation logic and data quality checks that feed reporting, bringing an analytics engineering approach to the Insights team.",
+        "Build and automate Power BI dashboards on top of Databricks, reducing manual workload and turnaround time, and partner with marketing, commercial and pricing stakeholders to define KPIs."
+      ],
+      "startDate": "2025-03",
+      "endDate": null,
+      "url": "",
+      "summary": null
+    },
+    {
+      "name": "Minsait (Indra Group)",
+      "period": "Feb 2025 – Mar 2025",
+      "position": "Consultant Analyst",
+      "location": "Madrid, Spain",
+      "highlights": [
+        "Built an internal tool to automate commercial proposal generation and designed semantic data models for client systems."
+      ],
+      "startDate": "2025-02",
+      "endDate": "2025-03",
+      "url": "",
+      "summary": null
+    },
+    {
+      "name": "Panoram Hotel Management",
+      "period": "Sep 2024 – Feb 2025",
+      "position": "Data & BI Analyst (Internship)",
+      "location": "Madrid, Spain",
+      "highlights": [
+        "Primary analytical partner to the Commercial Strategy & BI Director across a multi-brand hotel portfolio.",
+        "Developed forecasting models (SARIMAX, XGBoost) for occupancy and revenue to support commercial planning.",
+        "Led data standardization and data quality initiatives, improving reporting reliability and governance.",
+        "Designed executive Power BI dashboards and automated recurring reports for senior leadership and HR."
+      ],
+      "startDate": "2024-09",
+      "endDate": "2025-02",
+      "url": "",
+      "summary": null
+    },
+    {
+      "name": "Mediapro",
+      "period": "Feb 2022 – Aug 2022",
+      "position": "Business Administration Intern | Finance & Controlling",
+      "location": "Madrid, Spain",
+      "highlights": [
+        "Supported invoicing, cost tracking and month-end processes, using SAP for day-to-day financial operations.",
+        "Prepared Excel reports and reconciliations for the finance team."
+      ],
+      "startDate": "2022-02",
+      "endDate": "2022-08",
+      "url": "",
+      "summary": null
+    }
+  ],
+  "skills": [
+    {
+      "name": "Data Platforms",
+      "keywords": [
+        "Databricks (SQL, Notebooks, Spark), Snowflake, BigQuery, AWS (S3, Glue, Lambda, Redshift)"
+      ]
+    },
+    {
+      "name": "Languages",
+      "keywords": [
+        "SQL (advanced), Python (pandas, NumPy, scikit-learn), DAX, Power Query (M)"
+      ]
+    },
+    {
+      "name": "BI & Process Analytics",
+      "keywords": [
+        "Power BI, Tableau, Celonis (Process Mining), Excel (advanced)"
+      ]
+    },
+    {
+      "name": "Digital Analytics",
+      "keywords": [
+        "GA4 (BigQuery export), A/B testing & experimentation, Web scraping, REST APIs"
+      ]
+    },
+    {
+      "name": "Analytics & ML",
+      "keywords": [
+        "Time series forecasting (SARIMAX), XGBoost, Random Forest, Regression"
+      ]
+    },
+    {
+      "name": "Data Engineering",
+      "keywords": [
+        "ETL/ELT pipelines, Data modeling, Data quality, PostgreSQL, MySQL, MongoDB, Git"
+      ]
+    }
+  ],
+  "certificates": [
+    {
+      "name": "AWS Certified Data Engineer (Associate)",
+      "issuer": "Amazon Web Services",
+      "date": "Apr 2026",
+      "url": ""
+    },
+    {
+      "name": "AWS Data Analytics Program (Specialty level)",
+      "issuer": "Experis",
+      "date": "May 2025",
+      "url": ""
+    },
+    {
+      "name": "Snowflake Hands-On Essentials (Warehousing, Data Lake, Data Apps)",
+      "issuer": "Snowflake",
+      "date": "Apr 2025",
+      "url": ""
+    },
+    {
+      "name": "CS50x & CS50AI",
+      "issuer": "Harvard University",
+      "date": "Feb 2025",
+      "url": ""
+    }
+  ],
+  "education": [
+    {
+      "institution": "EAE Business School",
+      "period": "2024 – 2025",
+      "area": "Master in Big Data & Business Analytics",
+      "location": "Madrid, Spain"
+    },
+    {
+      "institution": "Universidad Complutense de Madrid",
+      "period": "2018 – 2022",
+      "area": "Bachelor's Degree in Business Administration (taught in English)",
+      "location": "Madrid, Spain"
+    },
+    {
+      "institution": "Marietta High School",
+      "period": "2016 – 2017",
+      "area": "Academic Exchange Program (full academic year)",
+      "location": "Marietta, OH, USA"
+    }
+  ],
+  "languages": [
+    {
+      "language": "Spanish",
+      "fluency": "Native"
+    },
+    {
+      "language": "English",
+      "fluency": "C1, Cambridge"
+    },
+    {
+      "language": "German",
+      "fluency": "A2"
+    }
+  ]
+}
