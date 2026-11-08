@@ -1,0 +1,88 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{iftex}
+\ifPDFTeX
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{tgheros}
+\renewcommand{\familydefault}{\sfdefault}
+\else
+\usepackage{fontspec}
+\setmainfont{texgyreheros-regular.otf}[BoldFont=texgyreheros-bold.otf,ItalicFont=texgyreheros-italic.otf,Ligatures=NoCommon]
+\fi
+\usepackage[spanish,es-noshorthands,es-nolists]{babel}
+\usepackage[margin=1.35cm]{geometry}
+\usepackage{enumitem,titlesec,xcolor,tabularx}
+\usepackage[hidelinks]{hyperref}
+\ifdefined\pdfgentounicode
+\input{glyphtounicode}
+\pdfgentounicode=1
+\fi
+\definecolor{accent}{HTML}{163B50}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\tabcolsep}{0pt}
+\raggedright
+\titleformat{\section}{\color{accent}\normalsize\bfseries}{}{0pt}{}[\vspace{-5pt}\rule{\linewidth}{0.5pt}]
+\titlespacing*{\section}{0pt}{6pt}{3pt}
+\linespread{0.96}
+\setlist[itemize]{leftmargin=12pt,topsep=1pt,itemsep=0pt,parsep=0pt,partopsep=0pt}
+\newcommand{\job}[4]{\textbf{#1}\hfill\textbf{\small #2}\\{\small #3\hfill #4}\par}
+\newcommand{\entry}[3]{\textbf{#1}\hfill{\small #3}\\#2\par\vspace{3pt}}
+\hypersetup{pdftitle={Pablo Álvaro Hidalgo - BI and Analytics},pdfauthor={Pablo Álvaro Hidalgo},pdfsubject={BI, SQL, Power BI, Analytics Engineering}}
+\begin{document}
+{\LARGE\bfseries Pablo Álvaro Hidalgo}\\[3pt]
+{\large\color{accent} BI \& Analytics | SQL · Data Modeling · Databricks}\\[5pt]
+\small
+Madrid, España \enspace|\enspace +34 605 054 449 \enspace|\enspace \href{mailto:palvaroh2000@gmail.com}{palvaroh2000@gmail.com}\\[2pt]
+\href{https://www.linkedin.com/in/pabblo2000/}{linkedin.com/in/pabblo2000} \enspace|\enspace \href{https://github.com/pabblo2000}{github.com/pabblo2000}
+\normalsize
+
+\section{PERFIL}
+Analista de datos con más de dos años de experiencia, especializado en BI y análisis comercial. Actualmente CRM Data Analyst en Ryanair: consultas complejas en SQL y Spark SQL sobre Databricks, Power BI avanzado y reporting para dirección. Combino comprensión del negocio y del grano de los datos con formación en ingeniería de datos. Certificado AWS Certified Data Engineer -- Associate, con orientación hacia Analytics Engineering.
+
+\section{EXPERIENCIA}
+\job{Ryanair}{Mar 2025 -- Actualidad}{CRM Data Analyst | Insights}{Madrid, España}
+\begin{itemize}
+\item Desarrollo de consultas complejas en \textbf{SQL y Spark SQL sobre Databricks} para analizar clientes, reservas y campañas CRM, teniendo en cuenta el grano de los datos.
+\item Desarrollo de \textbf{dashboards en Power BI} y colaboración con marketing, comercial y pricing en la definición de KPIs y necesidades de reporting.
+\item Responsable del reporting diario de ingresos y reclamaciones de pasajeros (EU261) para el \textbf{CMO}, con foco en rendimiento comercial y exposición a compensaciones.
+\item Diseño y evaluación de \textbf{tests A/B} en campañas CRM y traducción de los resultados en recomendaciones de negocio.
+\end{itemize}
+\job{Minsait (Grupo Indra)}{Feb 2025 -- Mar 2025}{Consultor Analista}{Madrid, España}
+\begin{itemize}
+\item Desarrollo de una herramienta interna de generación de propuestas comerciales y diseño de modelos semánticos de datos para sistemas de cliente.
+\end{itemize}
+\job{Panoram Hotel Management}{Sep 2024 -- Feb 2025}{Analista de Datos y BI (Prácticas)}{Madrid, España}
+\begin{itemize}
+\item Apoyo al Director de Estrategia Comercial y BI mediante dashboards ejecutivos de \textbf{Power BI} y reporting para dirección y RR.\,HH.
+\item Desarrollo de modelos de previsión de ocupación e ingresos con \textbf{SARIMAX y XGBoost} para apoyar la planificación comercial.
+\item Participación en iniciativas de estandarización y calidad del dato para mejorar la fiabilidad del reporting.
+\end{itemize}
+\job{Mediapro}{Feb 2022 -- Ago 2022}{Becario de ADE | Finanzas y Control de Gestión}{Madrid, España}
+\begin{itemize}
+\item Apoyo en facturación, seguimiento de costes y cierres mensuales con SAP; informes y conciliaciones en Excel.
+\end{itemize}
+
+\section{COMPETENCIAS TÉCNICAS}
+\textbf{BI y SQL:} Power BI (avanzado), DAX, Power Query (M), SQL (avanzado), Spark SQL, Databricks.\\
+\textbf{Datos y programación:} Python (pandas, NumPy, scikit-learn), grano y modelado de datos, Git.\\
+\textbf{Analítica:} KPIs comerciales, tests A/B, GA4 / BigQuery, forecasting, APIs REST y web scraping.\\
+\textbf{Cloud y formación:} AWS (S3, Glue, Lambda, Redshift; conocimientos teóricos), Snowflake (formación práctica); Airflow (en aprendizaje), PySpark (básico).
+
+\section{PROYECTOS}
+\textbf{YouTube Data Scraper \& Analyzer:} extracción mediante API y scraping; análisis de sentimiento y engagement.\\
+\textbf{Time-Series Interpolation Library:} librería Python para tratar valores faltantes en series temporales.\\
+\textbf{Wine Quality Prediction:} aprendizaje supervisado, ingeniería de variables y validación cruzada.
+
+\section{CERTIFICACIÓN Y FORMACIÓN COMPLEMENTARIA}
+\textbf{AWS Certified Data Engineer -- Associate} | Amazon Web Services \hfill Abr 2026\\
+\textbf{Programa AWS Data Analytics} | Experis \hfill May 2025\\
+\textbf{Snowflake Hands-On Essentials} | Warehousing, Data Lake, Data Apps \hfill Abr 2025\\
+\textbf{CS50x y CS50AI} | Harvard University \hfill Feb 2025
+
+\section{FORMACIÓN E IDIOMAS}
+\textbf{Máster en Big Data y Business Analytics} | EAE Business School \hfill 2024 -- 2025\\
+\textbf{Grado en ADE, impartido en inglés} | Universidad Complutense de Madrid \hfill 2018 -- 2022\\
+\textbf{Idiomas:} Español nativo · Inglés C1 (Cambridge) · Alemán A2.
+\end{document}
