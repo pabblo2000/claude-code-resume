@@ -1,459 +1,553 @@
-"use client";
-import {
-  useState,
-  useRef,
-  useEffect,
-  type FormEvent,
-  type KeyboardEvent,
-} from "react";
-import { ArrowUpRight, Download, ArrowRight, Trash2 } from "lucide-react";
-import { Navigation } from "./Navigation";
-import { useLanguage } from "./LanguageProvider";
-import { useCommandHistory } from "@/lib/useCommandHistory";
-import {
-  contact,
-  pdfUrl,
-  type ResumeContent,
-  type Language,
-} from "@/lib/portfolio";
-import {
-  findCommand,
-  fuzzyMatch,
-  filterCommands,
-  commands,
-} from "@/lib/commands";
-type Entry = {
-  id: number;
-  input: string;
-  command?: string;
-  text?: string;
-  language: Language;
-};
-function Result({
-  command,
-  r,
-  lang,
-}: {
-  command: string;
-  r: ResumeContent;
-  lang: Language;
-}) {
-  switch (command) {
-    case "/about":
-      return (
-        <div>
-          <h3>{r.name}</h3>
-          <p className="terminal-accent">{r.title}</p>
-          <p>{r.profile}</p>
-        </div>
-      );
-    case "/experience":
-      return (
-        <div>
-          {r.work.map((w) => (
-            <article className="term-work" key={w.name}>
-              <h3>
-                {w.name}
-                <span>{w.period}</span>
-              </h3>
-              <p className="terminal-accent">{w.position}</p>
-              <ul>
-                {w.highlights.map((h) => (
-                  <li key={h}>{h}</li>
-                ))}
-              </ul>
-            </article>
-          ))}
-        </div>
-      );
-    case "/skills":
-      return (
-        <div>
-          {r.skills.map((s) => (
-            <p key={s.name}>
-              <b className="terminal-accent">{s.name}</b>
-              <br />
-              {s.value}
-            </p>
-          ))}
-        </div>
-      );
-    case "/projects":
-      return (
-        <div>
-          {r.projects.map((p) => (
-            <p key={p.name}>
-              <a href={p.url} target="_blank" rel="noreferrer">
-                {p.name} ↗
-              </a>
-              <br />
-              {p.description}
-            </p>
-          ))}
-        </div>
-      );
-    case "/education":
-      return (
-        <div>
-          {r.education.map((e) => (
-            <p key={e.institution}>
-              <b className="terminal-accent">{e.institution}</b> · {e.period}
-              <br />
-              {e.area}
-            </p>
-          ))}
-        </div>
-      );
-    case "/certs":
-      return (
-        <div>
-          {r.certificates.map((c) => (
-            <p key={c.name}>
-              <b className="terminal-accent">{c.name}</b>
-              <br />
-              {c.issuer} · {c.date}
-            </p>
-          ))}
-        </div>
-      );
-    case "/languages":
-      return <p>{r.languages}</p>;
-    case "/contact":
-      return (
-        <div>
-          <p>
-            <a href={`mailto:${contact.email}`}>{contact.email}</a>
-            <br />
-            <a href={`tel:${contact.phone.replaceAll(" ", "")}`}>
-              {contact.phone}
-            </a>
-          </p>
-          <p>
-            <a href={contact.linkedin} target="_blank" rel="noreferrer">
-              LinkedIn ↗
-            </a>{" "}
-            ·{" "}
-            <a href={contact.github} target="_blank" rel="noreferrer">
-              GitHub ↗
-            </a>
-          </p>
-        </div>
-      );
-    case "/resume":
-      return (
-        <p>
-          <a className="term-download" href={pdfUrl(lang)} download>
-            <Download size={15} />
-            {lang === "es"
-              ? "Descargar CV original (ES)"
-              : "Download original CV (EN)"}
-          </a>
-        </p>
-      );
-    case "/help":
-      return (
-        <div className="term-help">
-          {commands.map((c) => (
-            <div key={c.name}>
-              <b>{c.name}</b>
-              <span>{lang === "es" ? helpEs[c.name] : c.description}</span>
-            </div>
-          ))}
-        </div>
-      );
-    default:
-      return null;
-  }
+'use client';
+
+import { useState, useCallback, useEffect, useRef, ReactNode } from 'react';
+import { WelcomeScreen } from './WelcomeScreen';
+import { InputBox } from './InputBox';
+import { SlashMenu } from './SlashMenu';
+import { Spinner } from './Spinner';
+import { MarkdownOutput } from './MarkdownOutput';
+import { useCommandHistory } from '@/hooks/useCommandHistory';
+import { useAutoComplete } from '@/hooks/useAutoComplete';
+import { useTerminalScroll } from '@/hooks/useTerminalScroll';
+import { findCommand, fuzzyMatch, filterCommands } from '@/lib/commands';
+import { colors } from '@/lib/colors';
+import { useLanguage } from './LanguageProvider';
+
+// Command outputs
+import { Help, helpCommands } from './commands/Help';
+import { About } from './commands/About';
+import { Experience } from './commands/Experience';
+import { Skills } from './commands/Skills';
+import { Education } from './commands/Education';
+import { Certs } from './commands/Certs';
+import { Contact } from './commands/Contact';
+import { Models, careerModels } from './commands/Models';
+import { Languages } from './commands/Languages';
+import { Status } from './commands/Status';
+import { Cost } from './commands/Cost';
+import { Doctor } from './commands/Doctor';
+import { Download } from './commands/Download';
+import { Usage } from './commands/Usage';
+import { Init } from './commands/Init';
+import { Version } from './commands/Version';
+
+interface HistoryEntry {
+  id: string;
+  type: 'welcome' | 'command' | 'ai';
+  input?: string;
+  output?: ReactNode;
+  aiContent?: string;
+  isStreaming?: boolean;
 }
-const helpEs: Record<string, string> = {
-  "/help": "Lista de comandos",
-  "/about": "Perfil y puesto actual",
-  "/experience": "Experiencia profesional",
-  "/skills": "Competencias técnicas",
-  "/projects": "Proyectos y repositorios",
-  "/education": "Formación académica",
-  "/certs": "Certificaciones y cursos",
-  "/contact": "Email y redes profesionales",
-  "/languages": "Idiomas",
-  "/resume": "Descargar CV original",
-  "/clear": "Limpiar la terminal",
-};
+
 export function Terminal() {
-  const { lang, resume: r, t } = useLanguage();
-  const [input, setInput] = useState("");
-  const [entries, setEntries] = useState<Entry[]>([]);
-  const [loading, setLoading] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const endRef = useRef<HTMLDivElement>(null);
-  const idRef = useRef(0);
-  const requestRef = useRef<AbortController | null>(null);
+  const { lang } = useLanguage();
+  const [input, setInput] = useState('');
+  const [history, setHistory] = useState<HistoryEntry[]>([
+    { id: 'welcome', type: 'welcome' },
+  ]);
+  const [focused, setFocused] = useState(true);
+  const [showSlashMenu, setShowSlashMenu] = useState(false);
   const [menuIndex, setMenuIndex] = useState(0);
+  const [isAiLoading, setIsAiLoading] = useState(false);
+
+  // Model selector state
+  const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
+  const [modelSelectorIndex, setModelSelectorIndex] = useState(0);
+  const [currentModelIndex, setCurrentModelIndex] = useState(0);
+
+  // Help selector state
+  const [helpSelectorOpen, setHelpSelectorOpen] = useState(false);
+  const [helpSelectorIndex, setHelpSelectorIndex] = useState(0);
+
   const cmdHistory = useCommandHistory();
-  const matches = input.startsWith("/") ? filterCommands(input) : [];
+  const { complete } = useAutoComplete();
+  const { containerRef, scrollToBottom } = useTerminalScroll();
+  const abortRef = useRef<AbortController | null>(null);
+  const chatMessagesRef = useRef<{ role: 'user' | 'assistant'; content: string }[]>([]);
+  const [pendingHelpCommand, setPendingHelpCommand] = useState<string | null>(null);
+
+  // Auto-scroll on history changes
   useEffect(() => {
-    endRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-  }, [entries, loading]);
-  useEffect(() => () => requestRef.current?.abort(), []);
-  const execute = async (raw: string) => {
-    const value = raw.trim();
-    if (!value || loading) return;
-    setInput("");
-    setMenuIndex(0);
-    cmdHistory.push(value);
-    const command = findCommand(value.startsWith("/") ? value : `/${value}`);
-    if (command?.name === "/clear") {
-      setEntries([]);
-      return;
+    scrollToBottom();
+  }, [history, scrollToBottom]);
+
+  // Auto-scroll when slash menu or help selector opens or selection changes
+  useEffect(() => {
+    if (showSlashMenu || helpSelectorOpen) {
+      scrollToBottom();
     }
-    const id = ++idRef.current;
-    if (command) {
-      setEntries((prev) => [
-        ...prev,
-        { id, input: value, command: command.name, language: lang },
-      ]);
-      inputRef.current?.focus();
-      return;
+  }, [showSlashMenu, menuIndex, helpSelectorOpen, helpSelectorIndex, scrollToBottom]);
+
+  // Global keyboard shortcuts
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      // Model selector keyboard handling
+      if (modelSelectorOpen) {
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          setModelSelectorIndex((i) => Math.max(0, i - 1));
+          return;
+        }
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          setModelSelectorIndex((i) => Math.min(careerModels.length - 1, i + 1));
+          return;
+        }
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          setCurrentModelIndex(modelSelectorIndex);
+          setModelSelectorOpen(false);
+          return;
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          setModelSelectorOpen(false);
+          return;
+        }
+        return;
+      }
+
+      // Help selector keyboard handling
+      if (helpSelectorOpen) {
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          setHelpSelectorIndex((i) => Math.max(0, i - 1));
+          return;
+        }
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          setHelpSelectorIndex((i) => Math.min(helpCommands.length - 1, i + 1));
+          return;
+        }
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const cmd = helpCommands[helpSelectorIndex];
+          setHelpSelectorOpen(false);
+          if (cmd) setPendingHelpCommand(cmd.name);
+          return;
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          setHelpSelectorOpen(false);
+          return;
+        }
+        return;
+      }
+
+      if (e.ctrlKey && e.key === 'l') {
+        e.preventDefault();
+        handleClear();
+      }
+      if (e.ctrlKey && e.key === 'c') {
+        e.preventDefault();
+        if (abortRef.current) {
+          abortRef.current.abort();
+          abortRef.current = null;
+          setIsAiLoading(false);
+        }
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [modelSelectorOpen, modelSelectorIndex, helpSelectorOpen, helpSelectorIndex]);
+
+  const addEntry = useCallback((entry: Omit<HistoryEntry, 'id'>) => {
+    setHistory((prev) => [...prev, { ...entry, id: crypto.randomUUID() }]);
+  }, []);
+
+  const handleClear = useCallback(() => {
+    setHistory([{ id: 'welcome', type: 'welcome' }]);
+    chatMessagesRef.current = [];
+  }, []);
+
+  const renderCommandOutput = useCallback((commandName: string): ReactNode | null => {
+    switch (commandName) {
+      case '/help': return null; // handled separately — opens interactive selector
+      case '/about': return <About />;
+      case '/experience': return <Experience />;
+      case '/skills': return <Skills />;
+      case '/education': return <Education />;
+      case '/certs': return <Certs />;
+      case '/contact': return <Contact />;
+      case '/model':
+      case '/models':
+        return null; // handled separately — opens interactive selector
+      case '/languages': return <Languages />;
+      case '/status': return <Status />;
+      case '/cost': return <Cost />;
+      case '/doctor': return <Doctor />;
+      case '/resume': return <Download />;
+      case '/usage': return <Usage />;
+      case '/version':
+        return <Version />;
+      case '/init':
+        return <Init />;
+      case '/clear':
+        return null; // handled separately
+      default:
+        return null;
     }
-    if (value.startsWith("/")) {
-      const suggestion = fuzzyMatch(value);
-      setEntries((prev) => [
-        ...prev,
-        {
-          id,
-          input: value,
-          text: `${t.notFound}${suggestion ? ` → ${suggestion}` : ""}`,
-          language: lang,
-        },
-      ]);
-      return;
+  }, []);
+
+  const handleAIChat = useCallback(async (message: string) => {
+    const entryId = crypto.randomUUID();
+    setIsAiLoading(true);
+
+    // Add user message to conversation history
+    chatMessagesRef.current.push({ role: 'user', content: message });
+    // Keep last 20 messages to limit token cost
+    if (chatMessagesRef.current.length > 20) {
+      chatMessagesRef.current = chatMessagesRef.current.slice(-20);
     }
-    setEntries((prev) => [
+
+    setHistory((prev) => [
       ...prev,
-      { id, input: value, text: t.thinking, language: lang },
+      { id: entryId, type: 'ai', input: message, aiContent: '', isStreaming: true },
     ]);
-    setLoading(true);
-    const controller = new AbortController();
-    requestRef.current = controller;
+
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: value, language: lang }),
+      const controller = new AbortController();
+      abortRef.current = controller;
+
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message, language: lang,
+        }),
         signal: controller.signal,
       });
-      const data = await response.json();
-      setEntries((prev) =>
-        prev.map((e) =>
-          e.id === id
-            ? { ...e, text: response.ok ? data.reply : t.aiUnavailable }
-            : e,
-        ),
-      );
-    } catch {
-      if (!controller.signal.aborted)
-        setEntries((prev) =>
-          prev.map((e) => (e.id === id ? { ...e, text: t.aiUnavailable } : e)),
-        );
-    } finally {
-      if (!controller.signal.aborted) {
-        setLoading(false);
-        requestRef.current = null;
-        requestAnimationFrame(() => inputRef.current?.focus());
+
+      if (!response.ok) {
+        if (response.status === 429 || response.status === 503) {
+          setHistory((prev) =>
+            prev.map((e) =>
+              e.id === entryId
+                ? { ...e, aiContent: response.status === 503 ? 'AI chat is not configured yet. Explore the CV with /help, /about or /experience.' : 'Rate limit reached — try again in a minute.', isStreaming: false }
+                : e,
+            ),
+          );
+          setIsAiLoading(false);
+          return;
+        }
+        throw new Error(`HTTP ${response.status}`);
       }
+
+      const data = await response.json();
+      const accumulated = data.reply;
+      if (typeof accumulated !== 'string') throw new Error('Invalid response');
+      setHistory((prev) => prev.map((e) =>
+        e.id === entryId ? { ...e, aiContent: accumulated, isStreaming: false } : e,
+      ));
+
+      // Add assistant response to conversation history
+      chatMessagesRef.current.push({ role: 'assistant', content: accumulated });
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === 'AbortError') {
+        setHistory((prev) =>
+          prev.map((e) =>
+            e.id === entryId ? { ...e, aiContent: (e.aiContent || '') + '\n[cancelled]', isStreaming: false } : e,
+          ),
+        );
+      } else {
+        setHistory((prev) =>
+          prev.map((e) =>
+            e.id === entryId
+              ? { ...e, aiContent: 'Oops, something went wrong. My neural networks need a reboot. Try again!', isStreaming: false }
+              : e,
+          ),
+        );
+      }
+    } finally {
+      setIsAiLoading(false);
+      abortRef.current = null;
     }
-  };
-  const submit = (e: FormEvent) => {
-    e.preventDefault();
-    void execute(matches.length ? matches[menuIndex]?.name || input : input);
-  };
-  const keyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Tab" && matches.length) {
+  }, [lang]);
+
+  const handleSubmit = useCallback((overrideInput?: string) => {
+    const trimmed = (overrideInput ?? input).trim();
+    if (!trimmed) return;
+
+    setShowSlashMenu(false);
+    setMenuIndex(0);
+    cmdHistory.push(trimmed);
+
+    if (trimmed.startsWith('/')) {
+      const cmd = findCommand(trimmed);
+
+      if (cmd) {
+        // Special commands
+        if (cmd.name === '/clear') {
+          handleClear();
+          setInput('');
+          return;
+        }
+
+        if (cmd.name === '/help') {
+          addEntry({
+            type: 'command',
+            input: trimmed,
+          });
+          setHelpSelectorIndex(0);
+          setHelpSelectorOpen(true);
+          setInput('');
+          return;
+        }
+        if (cmd.name === '/model') {
+          addEntry({
+            type: 'command',
+            input: trimmed,
+          });
+          setModelSelectorIndex(currentModelIndex);
+          setModelSelectorOpen(true);
+          setInput('');
+          return;
+        }
+
+        const output = renderCommandOutput(cmd.name);
+        addEntry({ type: 'command', input: trimmed, output });
+      } else {
+        // Unknown command — fuzzy match
+        const suggestion = fuzzyMatch(trimmed);
+        addEntry({
+          type: 'command',
+          input: trimmed,
+          output: (
+            <div className="text-xs sm:text-sm py-1">
+              <span style={{ color: colors.error }}>
+                command not found: {trimmed}
+              </span>
+              {suggestion && (
+                <span style={{ color: colors.subtle }}>
+                  {' '}— Did you mean{' '}
+                  <span style={{ color: colors.success }}>{suggestion}</span>?
+                </span>
+              )}
+            </div>
+          ),
+        });
+      }
+    } else {
+      // Easter eggs
+      const lower = trimmed.toLowerCase();
+      if (lower === 'sudo hire pablo') {
+        addEntry({
+          type: 'command',
+          input: trimmed,
+          output: (
+            <MarkdownOutput content="Permission granted. Sending offer letter... Just kidding, but seriously, check /contact!" />
+          ),
+        });
+        setInput('');
+        return;
+      }
+
+      // AI chat
+      handleAIChat(trimmed);
+    }
+
+    setInput('');
+  }, [input, cmdHistory, handleClear, addEntry, renderCommandOutput, handleAIChat, currentModelIndex]);
+
+  // Process pending command from help selector
+  useEffect(() => {
+    if (pendingHelpCommand) {
+      const cmd = pendingHelpCommand;
+      setPendingHelpCommand(null);
+      handleSubmit(cmd);
+    }
+  }, [pendingHelpCommand, handleSubmit]);
+
+  const handleInputChange = useCallback((value: string) => {
+    setInput(value);
+    cmdHistory.reset();
+
+    if (value.startsWith('/') && value.length > 1) {
+      const matches = filterCommands(value);
+      setShowSlashMenu(matches.length > 0);
+      setMenuIndex(0);
+    } else if (value === '/') {
+      setShowSlashMenu(true);
+      setMenuIndex(0);
+    } else {
+      setShowSlashMenu(false);
+    }
+  }, [cmdHistory]);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    // When model selector is open, ignore all input key handling
+    // (arrows, Enter, Esc are handled by the global keydown listener)
+    if (modelSelectorOpen || helpSelectorOpen) {
       e.preventDefault();
-      setInput(matches[menuIndex].name);
       return;
     }
-    if (e.key === "ArrowUp") {
+
+    // ? shortcut to open help panel (only when input is empty)
+    if (e.key === '?' && input === '') {
       e.preventDefault();
-      if (matches.length) setMenuIndex((i) => Math.max(0, i - 1));
-      else setInput(cmdHistory.navigateUp(input) || input);
+      addEntry({ type: 'command', input: '?' });
+      setHelpSelectorIndex(0);
+      setHelpSelectorOpen(true);
+      return;
     }
-    if (e.key === "ArrowDown") {
+
+    if (e.key === 'Tab') {
       e.preventDefault();
-      if (matches.length)
+      const completed = complete(input);
+      if (completed) {
+        setInput(completed);
+        setShowSlashMenu(false);
+      }
+      return;
+    }
+
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (showSlashMenu) {
+        setMenuIndex((i) => Math.max(0, i - 1));
+      } else {
+        const prev = cmdHistory.navigateUp(input);
+        if (prev !== null) setInput(prev);
+      }
+      return;
+    }
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (showSlashMenu) {
+        const matches = filterCommands(input);
         setMenuIndex((i) => Math.min(matches.length - 1, i + 1));
-      else setInput(cmdHistory.navigateDown() || "");
+      } else {
+        const next = cmdHistory.navigateDown();
+        if (next !== null) setInput(next);
+      }
+      return;
     }
-    if (e.key === "Escape") setInput("");
-    if (e.ctrlKey && e.key === "l") {
+
+    if (e.key === 'Enter' && showSlashMenu) {
       e.preventDefault();
-      setEntries([]);
+      const matches = filterCommands(input);
+      if (matches[menuIndex]) {
+        setShowSlashMenu(false);
+        setInput('');
+        handleSubmit(matches[menuIndex].name);
+      }
+      return;
     }
-  };
+
+    if (e.key === 'Escape') {
+      setShowSlashMenu(false);
+    }
+  }, [input, showSlashMenu, menuIndex, cmdHistory, complete, handleSubmit, modelSelectorOpen, helpSelectorOpen, addEntry]);
+
   return (
-    <div className="terminal-page">
-      <Navigation terminal />
-      <main className="terminal-main">
-        <div className="terminal-topline">
-          <span>
-            <span className="status-dot" />
-            ~/pablo/resume
-          </span>
-          <div>
-            <span>{t.noKey}</span>
-            <button
-              type="button"
-              onClick={() => setEntries([])}
-              aria-label={t.clear}
-            >
-              <Trash2 size={15} />
-            </button>
-          </div>
-        </div>
-        <div className="terminal-launch" aria-hidden="true">
-          <span>❯</span> claude
-        </div>
-        <section className="terminal-welcome" aria-label={t.welcome}>
-          <div className="terminal-frame-title">
-            Claude Code <span>· CV</span>
-          </div>
-          <div className="terminal-welcome-panels">
-            <div className="terminal-profile">
-              <h1>{lang === "es" ? "¡Bienvenido!" : "Welcome!"}</h1>
-              <pre
-                className="terminal-logo"
-                aria-hidden="true"
-              >{`  ▐▛███▜▌\n ▝▜█████▛▘\n   ▘▘ ▝▝`}</pre>
-              <h2>{r.name}</h2>
-              <p className="terminal-profile-role">{r.title}</p>
-              <p className="terminal-path">~/pablo/resume</p>
-            </div>
-            <div className="terminal-tips">
-              <h2>
-                {lang === "es" ? "Para empezar" : "Tips for getting started"}
-              </h2>
-              <div className="terminal-command-grid">
-                {["/about", "/experience", "/skills", "/projects"].map(
-                  (cmd) => (
-                    <button
-                      type="button"
-                      disabled={loading}
-                      key={cmd}
-                      onClick={() => void execute(cmd)}
-                    >
-                      <span>{cmd}</span>
-                      <small>
-                        {lang === "es"
-                          ? helpEs[cmd]
-                          : commands.find((c) => c.name === cmd)?.description}
-                      </small>
-                      <ArrowUpRight size={13} />
-                    </button>
-                  ),
-                )}
-              </div>
-              <p className="terminal-tip-hint">{t.welcomeBody}</p>
-              <div className="terminal-recent">
-                <h2>{t.certs}</h2>
-                <p>{r.certificates[0]?.name}</p>
-              </div>
-            </div>
-          </div>
-        </section>
-        <div
-          className="terminal-history"
-          role="log"
-          aria-label={
-            lang === "es" ? "Historial de la terminal" : "Terminal history"
-          }
-          aria-relevant="additions text"
-          aria-busy={loading}
-        >
-          {entries.map((e) => (
-            <section className="terminal-entry" key={e.id}>
-              <div className="terminal-echo">
-                <span>❯</span>
-                {e.input}
-              </div>
-              <div className="terminal-output">
-                {e.command ? (
-                  <Result command={e.command} r={r} lang={lang} />
-                ) : (
-                  <p>{e.text}</p>
-                )}
-              </div>
-            </section>
-          ))}
-        </div>
-        <div ref={endRef} />
-        <form className="terminal-input-form" onSubmit={submit}>
-          <label htmlFor="terminal-input">
-            ❯<span className="sr-only">{t.commandLabel}</span>
-          </label>
-          <input
-            id="terminal-input"
-            ref={inputRef}
-            value={input}
-            onChange={(e) => {
-              setInput(e.target.value);
-              setMenuIndex(0);
-              cmdHistory.reset();
-            }}
-            onKeyDown={keyDown}
-            disabled={loading}
-            autoComplete="off"
-            autoCapitalize="off"
-            spellCheck={false}
-            maxLength={1000}
-            placeholder={
-              loading
-                ? t.thinking
-                : lang === "es"
-                  ? "Escribe un comando o pregunta…"
-                  : "Type a command or ask a question…"
+    <div
+      className="h-screen flex flex-col overflow-hidden"
+      style={{ backgroundColor: colors.bg, color: colors.text }}
+    >
+      {/* Scrollable content — includes history AND input */}
+      <div
+        ref={containerRef}
+        className="flex-1 overflow-y-auto px-2 sm:px-4 py-2 sm:py-4"
+      >
+        <div className="max-w-[1100px] mx-auto">
+          {history.map((entry) => {
+            if (entry.type === 'welcome') {
+              return <WelcomeScreen key={entry.id} currentModelIndex={currentModelIndex} />;
             }
-          />
-          <button
-            type="submit"
-            disabled={!input.trim() || loading}
-            aria-label={t.send}
-          >
-            <ArrowRight size={18} />
-          </button>
-        </form>
-        {matches.length > 0 && (
-          <div
-            className="terminal-suggestions"
-            role="listbox"
-            aria-label={
-              lang === "es" ? "Comandos sugeridos" : "Suggested commands"
+
+            if (entry.type === 'command') {
+              return (
+                <div key={entry.id} className="mb-2">
+                  {/* Command echo */}
+                  <div className="text-xs sm:text-sm">
+                    <span style={{ color: colors.text }} className="font-bold">❯ </span>
+                    <span style={{ color: colors.text }}>{entry.input}</span>
+                  </div>
+                  {/* Command output */}
+                  {entry.output}
+                </div>
+              );
             }
-          >
-            {matches.map((c, i) => (
-              <button
-                role="option"
-                aria-selected={menuIndex === i}
-                type="button"
-                key={c.name}
-                onClick={() => void execute(c.name)}
-              >
-                <span>{c.name}</span>
-                <small>{lang === "es" ? helpEs[c.name] : c.description}</small>
-              </button>
-            ))}
-          </div>
-        )}
-        <div className="terminal-hint">{t.terminalHint}</div>
-        <footer className="terminal-footer">
-          <span>{t.based}</span>
-          <a
-            href="https://github.com/ambaena/claude-code-resume"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Source <ArrowUpRight size={12} />
-          </a>
-        </footer>
-      </main>
+
+            if (entry.type === 'ai') {
+              return (
+                <div key={entry.id} className="mb-2">
+                  {/* User message echo */}
+                  <div className="text-xs sm:text-sm">
+                    <span style={{ color: colors.text }} className="font-bold">❯ </span>
+                    <span style={{ color: colors.text }}>{entry.input}</span>
+                  </div>
+                  {/* AI response */}
+                  {entry.isStreaming && !entry.aiContent ? (
+                    <Spinner />
+                  ) : (
+                    <MarkdownOutput content={entry.aiContent || ''} />
+                  )}
+                  {entry.isStreaming && entry.aiContent && <Spinner />}
+                </div>
+              );
+            }
+
+            return null;
+          })}
+
+          {/* Help selector — rendered live */}
+          {helpSelectorOpen && (
+            <Help
+              selectedIndex={helpSelectorIndex}
+              onSelect={(command) => {
+                setHelpSelectorOpen(false);
+                handleSubmit(command);
+              }}
+              onCancel={() => setHelpSelectorOpen(false)}
+            />
+          )}
+
+          {/* Model selector — rendered live */}
+          {modelSelectorOpen && (
+            <Models
+              selectedIndex={modelSelectorIndex}
+              currentIndex={currentModelIndex}
+              onConfirm={(index) => {
+                setCurrentModelIndex(index);
+                setModelSelectorOpen(false);
+              }}
+              onCancel={() => setModelSelectorOpen(false)}
+            />
+          )}
+
+          {/* Input then slash menu below — hidden when help selector is open */}
+          {!helpSelectorOpen && (
+            <>
+              <InputBox
+                value={input}
+                onChange={handleInputChange}
+                onSubmit={handleSubmit}
+                onKeyDown={handleKeyDown}
+                focused={focused}
+                onFocus={() => setFocused(true)}
+                disabled={isAiLoading}
+              />
+              {showSlashMenu && (
+                <SlashMenu
+                  input={input}
+                  selectedIndex={menuIndex}
+                  onSelect={(cmd) => {
+                    setInput(cmd);
+                    setShowSlashMenu(false);
+                  }}
+                />
+              )}
+              {/* Hint */}
+              <div className="text-xs py-0.5 ml-2" style={{ color: colors.subtle }}>
+                ? for shortcuts
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

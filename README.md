@@ -1,6 +1,6 @@
 # Pablo Álvaro Hidalgo — CV y terminal
 
-Una aplicación Next.js con dos vistas del mismo CV: una portada en `/` y una terminal inspirada en Claude Code (fondo neutro, acentos terracota y mascota ASCII) en `/terminal`. Incluye español e inglés. No hay base de datos, cuentas de visitantes ni un servidor separado que mantener.
+Una aplicación Next.js con dos vistas del mismo CV: una portada en `/` y la terminal original de Claude Resume (fondo negro, fuente Hack, bordes y mascota originales) en `/terminal`. Incluye español e inglés. No hay base de datos, cuentas de visitantes ni un servidor separado que mantener.
 
 ## La estructura que tienes que conocer
 
@@ -23,14 +23,19 @@ CV/
 │   ├── components/
 │   │   ├── Portfolio.tsx
 │   │   ├── Terminal.tsx
-│   │   ├── Navigation.tsx
+│   │   ├── WelcomeScreen.tsx, InputBox.tsx, SlashMenu.tsx, Spinner.tsx, MarkdownOutput.tsx
+│   │   ├── commands/            Salidas de los comandos originales
 │   │   └── LanguageProvider.tsx
+│   ├── config/                  Datos personales y opciones del terminal
+│   ├── hooks/                   Historial, autocompletado, scroll y CV por idioma
 │   ├── data/resumes.json
 │   └── lib/
 │       ├── portfolio.ts
 │       ├── commands.ts
 │       ├── system-prompt.ts
-│       └── useCommandHistory.ts
+│       ├── resume-data.ts
+│       ├── colors.ts
+│       └── types.ts
 ├── .vscode/settings.json
 ├── .env.example
 ├── .gitignore
@@ -73,8 +78,9 @@ Next.js usa los nombres de estas carpetas para definir las direcciones de la web
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Portfolio.tsx`        | Dibuja un CV de una sola columna, similar a un PDF: nombre, contacto y secciones de texto. Incluye ES/EN, descarga del PDF y un enlace discreto a la terminal. |
 | `Terminal.tsx`         | Dibuja la terminal, procesa comandos, muestra resultados, autocompleta y envía preguntas al chat.                                                              |
-| `Navigation.tsx`       | Cabecera de la terminal: nombre, ES/EN y enlace para volver al CV. La portada incluye sus propios controles discretos.                                         |
 | `LanguageProvider.tsx` | Mantiene el idioma elegido y lo comparte con las piezas anteriores. Lee `?lang=en` o `?lang=es` y guarda la preferencia en el navegador.                       |
+
+`WelcomeScreen`, `InputBox`, `SlashMenu`, `Spinner`, `MarkdownOutput` y `commands/` recuperan la interfaz original del repositorio upstream. Los cambios se limitan al contenido personal y al transporte del chat. La fuente Hack se sirve desde la propia web.
 
 Un componente es una función de React que construye una parte de la pantalla. No es otra aplicación ni otro servidor.
 
@@ -90,7 +96,14 @@ Este archivo conserva el contenido de los CV originales, no la revisión descart
 - `commands.ts`: lista los comandos y sus alias; reconoce `/work` como `/experience`, filtra sugerencias y propone comandos parecidos cuando escribes uno mal.
 - `system-prompt.ts`: instrucciones que recibe la IA junto con el CV: responder sobre Pablo como asistente, no inventar hechos y reconocer información desconocida. No contiene la clave.
 
-- `useCommandHistory.ts`: recuerda las entradas de la terminal y permite recuperarlas con ↑ y ↓. Guarda hasta 50 en el navegador mediante `localStorage`; no usa una base de datos ni las envía a un servidor para conservarlas. Es un _hook_, una función de React que gestiona estado; no necesita una carpeta adicional para este único archivo.
+- `resume-data.ts`: adapta el JSON bilingüe al formato de datos que esperan los componentes originales.
+- `colors.ts` y `types.ts`: colores originales y tipos del terminal.
+
+### `src/config` y `src/hooks`: configuración y comportamiento originales
+
+`config/site.ts` contiene la URL, el correo y el nombre del sitio; `config/personal.ts`, las opciones de carrera, actividad y competencias.
+
+`hooks/useCommandHistory.ts` recuerda las entradas con ↑ y ↓; `useAutoComplete.ts` autocompleta comandos; `useTerminalScroll.ts` sigue la salida; `useResume.ts` selecciona el CV según el idioma elegido en la portada.
 
 ## Cómo se conectan las piezas
 
