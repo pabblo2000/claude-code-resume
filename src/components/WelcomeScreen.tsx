@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+import { useLanguage } from './LanguageProvider';
 import { colors } from '@/lib/colors';
 import { siteConfig } from '@/config/site';
 import { careerModels } from './commands/Models';
@@ -23,12 +25,20 @@ function ClawdArt() {
 
 export function WelcomeScreen({ currentModelIndex = 0 }: WelcomeScreenProps) {
   const model = careerModels[currentModelIndex];
+  const { lang, t } = useLanguage();
 
   return (
     <div className="text-xs sm:text-sm select-none mb-4">
       {/* Path display */}
-      <div className="mb-1" style={{ color: colors.inactive }}>
-        {siteConfig.path}
+      <div className="mb-1 flex flex-wrap items-center justify-between gap-x-4 gap-y-1" style={{ color: colors.inactive }}>
+        <span>{siteConfig.path}</span>
+        <Link
+          href={`/?lang=${lang}`}
+          className="shrink-0 rounded border px-2 py-1 text-xs hover:bg-surface"
+          style={{ color: colors.subtle, borderColor: colors.inactive, textDecoration: 'none' }}
+        >
+          ← {t.classic}
+        </Link>
       </div>
       <div className="mb-3">
         <span style={{ color: colors.text }} className="font-bold">❯ </span>
