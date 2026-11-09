@@ -46,11 +46,22 @@ export async function POST(req: Request) {
         signal: AbortSignal.timeout(20000),
       },
     );
-    if (!response.ok)
+    if (!response.ok) {
+      // Return only known diagnostic codes, never Google's raw error or the key.
+      const failure = await response.json().catch(() => null);
+      const knownReasons = new Set([
+        "API_KEY_INVALID", "API_KEY_SERVICE_BLOCKED", "SERVICE_DISABLED",
+        "API_KEY_HTTP_REFERRER_BLOCKED", "API_KEY_IP_ADDRESS_BLOCKED",
+      ]);
+      const details = failure?.error?.details;
+      const providerReason = Array.isArray(details)
+        ? details.find((detail: { reason?: string }) => knownReasons.has(detail.reason ?? ""))?.reason
+        : undefined;
       return Response.json(
-        { error: "Chat unavailable" },
+        { error: "Chat unavailable", providerStatus: response.status, providerReason },
         { status: response.status === 429 ? 429 : 502 },
       );
+    }
     const data = await response.json();
     const parts = data.candidates?.[0]?.content?.parts;
     const reply = Array.isArray(parts)
