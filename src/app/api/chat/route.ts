@@ -1,4 +1,5 @@
 import { SYSTEM_PROMPT } from "@/lib/system-prompt";
+import { getResponseLanguage } from "@/lib/response-language";
 export const runtime = "nodejs";
 export async function POST(req: Request) {
   if (!process.env.AI_API_KEY)
@@ -22,7 +23,8 @@ export async function POST(req: Request) {
   )
     return Response.json({ error: "Invalid message" }, { status: 400 });
   const fallbackLanguage =
-    "language" in input && input.language === "en" ? "English" : "Spanish";
+    "language" in input && input.language === "en" ? "en" : "es";
+  const language = getResponseLanguage(input.message, fallbackLanguage) === "en" ? "English" : "Spanish";
   try {
     const response = await fetch(
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
@@ -34,7 +36,7 @@ export async function POST(req: Request) {
         },
         body: JSON.stringify({
           systemInstruction: {
-            parts: [{ text: SYSTEM_PROMPT + ` The website language is ${fallbackLanguage}. Use it only as a fallback for messages with no identifiable language (for example, "SQL?"). Otherwise reply in the language of the visitor's current message. An explicit request for an answer language takes precedence over both the message language and the website language.` }],
+            parts: [{ text: SYSTEM_PROMPT + ` OUTPUT LANGUAGE: ${language}. Write the ENTIRE response in ${language}, including jokes, closing lines and command suggestions. Keep command names unchanged. The CV data and examples may use another language; translate their meaning instead of copying their wording.` }],
           },
           contents: [
             { role: "user", parts: [{ text: input.message }] },
