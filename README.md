@@ -185,7 +185,7 @@ pnpm start
 
 ## IA, GitHub y alojamiento
 
-La web y sus comandos funcionan sin IA. El chat opcional requiere `AI_API_KEY` en `.env.local` durante desarrollo o en las variables del proyecto de Vercel. Usa `gemini-2.5-flash-lite`, el modelo del repositorio original. Nunca se debe poner una clave con prefijo `NEXT_PUBLIC_` ni subir `.env.local` a Git. Una cuota gratuita de IA tiene límites; no es uso ilimitado.
+La web y sus comandos funcionan sin IA. El chat opcional requiere `AI_API_KEY` en `.env.local` durante desarrollo o en las variables del proyecto de Vercel. Usa `gemini-3.5-flash-lite`, con cuota gratuita de Gemini. El modelo original `gemini-2.5-flash-lite` fue retirado por Google. Nunca se debe poner una clave con prefijo `NEXT_PUBLIC_` ni subir `.env.local` a Git. Una cuota gratuita de IA tiene límites; no es uso ilimitado.
 
 Todo vive en un solo proyecto. Al desplegarlo en Vercel, las páginas y los PDF se sirven allí y la ruta `/api/chat` se ejecuta en su entorno de servidor. No hay que contratar una máquina aparte para ese pequeño backend. El fork ya está creado en [pabblo2000/claude-code-resume](https://github.com/pabblo2000/claude-code-resume). El repositorio local lo usa como `origin`. La web está publicada en https://pablo-alvaro-cv.vercel.app/ con el plan Hobby de Vercel; cada push a `main` genera un despliegue automático.
 
