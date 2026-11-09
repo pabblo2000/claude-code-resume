@@ -11,6 +11,7 @@
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.0.0",
     "@fontsource/ibm-plex-mono": "^5.0.0",
+    "@vercel/analytics": "^2.0.1",
     "hack-font": "^3.3.0",
     "lucide-react": "^0.468.0",
     "next": "latest",
