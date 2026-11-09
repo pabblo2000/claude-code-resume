@@ -69,12 +69,12 @@ Next.js usa los nombres de estas carpetas para definir las direcciones de la web
 
 ### `src/components`: las piezas de la interfaz
 
-| Archivo                | Qué hace                                                                                                                                 |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `Portfolio.tsx`        | Dibuja el CV clásico: presentación, experiencia, competencias, proyectos, formación y contacto.                                          |
-| `Terminal.tsx`         | Dibuja la terminal, procesa comandos, muestra resultados, autocompleta y envía preguntas al chat.                                        |
-| `Navigation.tsx`       | Cabecera compartida: nombre, navegación, ES/EN y enlace entre CV y terminal.                                                             |
-| `LanguageProvider.tsx` | Mantiene el idioma elegido y lo comparte con las piezas anteriores. Lee `?lang=en` o `?lang=es` y guarda la preferencia en el navegador. |
+| Archivo                | Qué hace                                                                                                                                                       |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Portfolio.tsx`        | Dibuja un CV de una sola columna, similar a un PDF: nombre, contacto y secciones de texto. Incluye ES/EN, descarga del PDF y un enlace discreto a la terminal. |
+| `Terminal.tsx`         | Dibuja la terminal, procesa comandos, muestra resultados, autocompleta y envía preguntas al chat.                                                              |
+| `Navigation.tsx`       | Cabecera de la terminal: nombre, ES/EN y enlace para volver al CV. La portada incluye sus propios controles discretos.                                         |
+| `LanguageProvider.tsx` | Mantiene el idioma elegido y lo comparte con las piezas anteriores. Lee `?lang=en` o `?lang=es` y guarda la preferencia en el navegador.                       |
 
 Un componente es una función de React que construye una parte de la pantalla. No es otra aplicación ni otro servidor.
 
