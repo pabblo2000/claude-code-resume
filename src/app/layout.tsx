@@ -5,6 +5,7 @@ import "@fontsource/ibm-plex-mono/500.css";
 import "hack-font/build/web/hack.css";
 import "./globals.css";
 import { LanguageProvider } from "@/components/LanguageProvider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 export const metadata: Metadata = {
   title: "Pablo Álvaro Hidalgo | Data & Digital Analyst",
   description:
@@ -27,6 +28,7 @@ export default function RootLayout({
     <html lang="es">
       <body>
         <LanguageProvider>{children}</LanguageProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
