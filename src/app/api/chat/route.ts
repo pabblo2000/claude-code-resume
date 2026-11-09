@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     input.message.length > 1000
   )
     return Response.json({ error: "Invalid message" }, { status: 400 });
-  const language =
+  const fallbackLanguage =
     "language" in input && input.language === "en" ? "English" : "Spanish";
   try {
     const response = await fetch(
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
         },
         body: JSON.stringify({
           systemInstruction: {
-            parts: [{ text: SYSTEM_PROMPT + ` Answer in ${language}.` }],
+            parts: [{ text: SYSTEM_PROMPT + ` The website language is ${fallbackLanguage}. Use it only as a fallback for messages with no identifiable language (for example, "SQL?"). Otherwise reply in the language of the visitor's current message. An explicit request for an answer language takes precedence over both the message language and the website language.` }],
           },
           contents: [
             { role: "user", parts: [{ text: input.message }] },
