@@ -1,7 +1,7 @@
 import { SYSTEM_PROMPT } from "@/lib/system-prompt";
 export const runtime = "nodejs";
 export async function POST(req: Request) {
-  if (!process.env.GROQ_API_KEY)
+  if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY)
     return Response.json({ error: "Chat not configured" }, { status: 503 });
   const raw = await req.text();
   if (raw.length > 6000)
@@ -25,23 +25,23 @@ export async function POST(req: Request) {
     "language" in input && input.language === "en" ? "English" : "Spanish";
   try {
     const response = await fetch(
-      "https://api.groq.com/openai/v1/chat/completions",
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent",
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+          "x-goog-api-key": process.env.GOOGLE_GENERATIVE_AI_API_KEY,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: process.env.GROQ_MODEL || "openai/gpt-oss-20b",
-          messages: [
-            {
-              role: "system",
-              content: SYSTEM_PROMPT + ` Answer in ${language}.`,
-            },
-            { role: "user", content: input.message },
+          systemInstruction: {
+            parts: [{ text: SYSTEM_PROMPT + ` Answer in ${language}.` }],
+          },
+          contents: [
+            { role: "user", parts: [{ text: input.message }] },
           ],
-          max_completion_tokens: 600,
+          generationConfig: {
+            maxOutputTokens: 600,
+          },
         }),
         signal: AbortSignal.timeout(20000),
       },
@@ -52,7 +52,15 @@ export async function POST(req: Request) {
         { status: response.status === 429 ? 429 : 502 },
       );
     const data = await response.json();
-    const reply = data.choices?.[0]?.message?.content;
+    const parts = data.candidates?.[0]?.content?.parts;
+    const reply = Array.isArray(parts)
+      ? parts
+          .filter((part: { text?: unknown; thought?: boolean }) =>
+            !part.thought && typeof part.text === "string",
+          )
+          .map((part: { text: string }) => part.text)
+          .join("")
+      : "";
     if (typeof reply !== "string" || !reply)
       return Response.json({ error: "Empty response" }, { status: 502 });
     return Response.json(

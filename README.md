@@ -70,7 +70,7 @@ Next.js usa los nombres de estas carpetas para definir las direcciones de la web
 | `terminal/page.tsx` | Entrada de `/terminal`: muestra el componente `Terminal`.                                              |
 | `layout.tsx`        | Estructura compartida: HTML, fuentes, título, metadatos y proveedor de idioma. Envuelve ambas páginas. |
 | `globals.css`       | Diseño visual: colores, tipografía, tamaños, separación y adaptación a móvil.                          |
-| `api/chat/route.ts` | Recibe las preguntas del chat y, si hay una clave configurada, llama a Groq desde el servidor.         |
+| `api/chat/route.ts` | Recibe las preguntas del chat y, si hay una clave configurada, llama a Gemini desde el servidor.         |
 
 ### `src/components`: las piezas de la interfaz
 
@@ -117,7 +117,7 @@ flowchart TD
     PDF[public/cv: PDF originales] --> Descarga[Descarga desde ambas vistas]
     Terminal -->|Pregunta libre| API[POST /api/chat]
     Prompt[system-prompt.ts + CV] --> API
-    API -->|Solo si hay clave| Groq[API externa de Groq]
+    API -->|Solo si hay clave| Gemini[API externa de Gemini]
 ```
 
 Al escribir `/experience`, la terminal lee el CV y muestra la experiencia: no llama a una IA y no consume cuota. Al escribir una pregunta libre, hace una petición a `/api/chat`. Esa ruta comprueba la entrada, añade las instrucciones y el CV y solicita una respuesta al proveedor. Sin clave devuelve «no disponible» y los comandos siguen funcionando.
@@ -185,8 +185,19 @@ pnpm start
 
 ## IA, GitHub y alojamiento
 
-La web y sus comandos funcionan sin IA. El chat opcional requiere `GROQ_API_KEY` en `.env.local` durante desarrollo o en las variables del proyecto de Vercel. `GROQ_MODEL` selecciona el modelo. Nunca se debe poner una clave con prefijo `NEXT_PUBLIC_` ni subir `.env.local` a Git. Una cuota gratuita de IA tiene límites; no es uso ilimitado.
+La web y sus comandos funcionan sin IA. El chat opcional requiere `GOOGLE_GENERATIVE_AI_API_KEY` en `.env.local` durante desarrollo o en las variables del proyecto de Vercel. Usa `gemini-2.5-flash-lite`, el modelo del repositorio original. Nunca se debe poner una clave con prefijo `NEXT_PUBLIC_` ni subir `.env.local` a Git. Una cuota gratuita de IA tiene límites; no es uso ilimitado.
 
 Todo vive en un solo proyecto. Al desplegarlo en Vercel, las páginas y los PDF se sirven allí y la ruta `/api/chat` se ejecuta en su entorno de servidor. No hay que contratar una máquina aparte para ese pequeño backend. El fork ya está creado en [pabblo2000/claude-code-resume](https://github.com/pabblo2000/claude-code-resume). El repositorio local lo usa como `origin`. La web está publicada en https://pablo-alvaro-cv.vercel.app/ con el plan Hobby de Vercel; cada push a `main` genera un despliegue automático.
 
 El código adapta [Claude Resume](https://github.com/ambaena/claude-code-resume), de Alfonso Baena. Su historial está integrado en Git y `upstream` apunta al repositorio original. El código retirado sigue recuperable en ese historial; no se mantienen carpetas extra con copias de componentes sin uso.
+
+
+Para activar Gemini en Vercel:
+
+1. Crea una clave en [Google AI Studio](https://aistudio.google.com/app/apikey).
+2. En el proyecto de Vercel, abre **Settings → Environment Variables**.
+3. Añade `GOOGLE_GENERATIVE_AI_API_KEY` con tu clave como valor, para **Production**.
+4. Guarda y ejecuta **Redeploy** del último despliegue para que se aplique.
+5. Escribe una pregunta sin `/` en la terminal para probar el chat.
+
+La clave permanece en el servidor. Sin ella, el chat indica que aún no está configurado y los comandos siguen funcionando.
