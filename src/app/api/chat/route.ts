@@ -1,7 +1,7 @@
 import { SYSTEM_PROMPT } from "@/lib/system-prompt";
 export const runtime = "nodejs";
 export async function POST(req: Request) {
-  if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY)
+  if (!process.env.AI_API_KEY)
     return Response.json({ error: "Chat not configured" }, { status: 503 });
   const raw = await req.text();
   if (raw.length > 6000)
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       {
         method: "POST",
         headers: {
-          "x-goog-api-key": process.env.GOOGLE_GENERATIVE_AI_API_KEY,
+          "x-goog-api-key": process.env.AI_API_KEY,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
