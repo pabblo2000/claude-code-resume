@@ -21,7 +21,7 @@ export const copy = {
     languages: "Idiomas",
     contact: "Contacto",
     download: "Descargar CV",
-    terminal: "Terminal",
+    terminal: "Claude Code",
     classic: "Volver al CV",
     heroBody:
       "Del modelado y la transformación del dato a los dashboards y las decisiones de negocio.",
@@ -50,7 +50,7 @@ export const copy = {
       "Escribe /help para empezar. ↑ ↓ historial · Tab autocompletar",
     commandLabel: "Comando o pregunta sobre Pablo",
     send: "Enviar",
-    welcome: "Mi CV, en modo terminal.",
+    welcome: "Mi CV, en modo Claude Code.",
     welcomeBody:
       "Puedes consultar mi experiencia, explorar mis competencias o descargar el CV. Prueba uno de estos comandos.",
     notFound: "Comando no encontrado. Prueba /help.",
@@ -71,7 +71,7 @@ export const copy = {
     languages: "Languages",
     contact: "Contact",
     download: "Download CV",
-    terminal: "Terminal",
+    terminal: "Claude Code",
     classic: "Back to resume",
     heroBody:
       "From modelling and transforming data to dashboards and business decisions.",
@@ -99,7 +99,7 @@ export const copy = {
     terminalHint: "Type /help to start. ↑ ↓ history · Tab autocomplete",
     commandLabel: "Command or question about Pablo",
     send: "Send",
-    welcome: "My resume, terminal edition.",
+    welcome: "My resume, Claude Code style.",
     welcomeBody:
       "Explore my experience, browse my skills or download my resume. Try one of these commands.",
     notFound: "Command not found. Try /help.",

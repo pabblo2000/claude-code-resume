@@ -6,13 +6,7 @@ import {
   type FormEvent,
   type KeyboardEvent,
 } from "react";
-import {
-  ArrowUpRight,
-  Download,
-  ArrowRight,
-  TerminalSquare,
-  Trash2,
-} from "lucide-react";
+import { ArrowUpRight, Download, ArrowRight, Trash2 } from "lucide-react";
 import { Navigation } from "./Navigation";
 import { useLanguage } from "./LanguageProvider";
 import { useCommandHistory } from "@/lib/useCommandHistory";
@@ -302,7 +296,7 @@ export function Terminal() {
         <div className="terminal-topline">
           <span>
             <span className="status-dot" />
-            pablo@portfolio: ~
+            ~/pablo/resume
           </span>
           <div>
             <span>{t.noKey}</span>
@@ -315,38 +309,56 @@ export function Terminal() {
             </button>
           </div>
         </div>
-        <div className="terminal-welcome">
-          <div className="terminal-logo" aria-hidden="true">
-            ❯_
-          </div>
-          <div className="terminal-kicker">
-            PABLO RESUME <span>v1.0</span>
-          </div>
-          <h1>{t.welcome}</h1>
-          <p>{t.welcomeBody}</p>
-          <div className="terminal-command-grid">
-            {["/about", "/experience", "/skills", "/projects"].map((cmd) => (
-              <button
-                type="button"
-                disabled={loading}
-                key={cmd}
-                onClick={() => void execute(cmd)}
-              >
-                <span>{cmd}</span>
-                <ArrowUpRight size={15} />
-                <small>
-                  {lang === "es"
-                    ? helpEs[cmd]
-                    : commands.find((c) => c.name === cmd)?.description}
-                </small>
-              </button>
-            ))}
-          </div>
-          <p className="terminal-welcome-note">
-            <TerminalSquare size={14} />
-            {r.title}
-          </p>
+        <div className="terminal-launch" aria-hidden="true">
+          <span>❯</span> claude
         </div>
+        <section className="terminal-welcome" aria-label={t.welcome}>
+          <div className="terminal-frame-title">
+            Claude Code <span>· CV</span>
+          </div>
+          <div className="terminal-welcome-panels">
+            <div className="terminal-profile">
+              <h1>{lang === "es" ? "¡Bienvenido!" : "Welcome!"}</h1>
+              <pre
+                className="terminal-logo"
+                aria-hidden="true"
+              >{`  ▐▛███▜▌\n ▝▜█████▛▘\n   ▘▘ ▝▝`}</pre>
+              <h2>{r.name}</h2>
+              <p className="terminal-profile-role">{r.title}</p>
+              <p className="terminal-path">~/pablo/resume</p>
+            </div>
+            <div className="terminal-tips">
+              <h2>
+                {lang === "es" ? "Para empezar" : "Tips for getting started"}
+              </h2>
+              <div className="terminal-command-grid">
+                {["/about", "/experience", "/skills", "/projects"].map(
+                  (cmd) => (
+                    <button
+                      type="button"
+                      disabled={loading}
+                      key={cmd}
+                      onClick={() => void execute(cmd)}
+                    >
+                      <span>{cmd}</span>
+                      <small>
+                        {lang === "es"
+                          ? helpEs[cmd]
+                          : commands.find((c) => c.name === cmd)?.description}
+                      </small>
+                      <ArrowUpRight size={13} />
+                    </button>
+                  ),
+                )}
+              </div>
+              <p className="terminal-tip-hint">{t.welcomeBody}</p>
+              <div className="terminal-recent">
+                <h2>{t.certs}</h2>
+                <p>{r.certificates[0]?.name}</p>
+              </div>
+            </div>
+          </div>
+        </section>
         <div
           className="terminal-history"
           role="log"

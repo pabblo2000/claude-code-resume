@@ -16,7 +16,7 @@ export function Navigation({ terminal = false }: { terminal?: boolean }) {
             pa<span>.</span>
           </span>
           <span className="wordmark-name">
-            pablo álvaro<span> / {terminal ? "terminal" : "resume"}</span>
+            pablo álvaro<span> / {terminal ? "claude code" : "resume"}</span>
           </span>
         </Link>
         {!terminal && (

@@ -1,6 +1,6 @@
 # Pablo Álvaro Hidalgo — CV y terminal
 
-Una aplicación Next.js con dos vistas del mismo CV: una portada en `/` y una terminal en `/terminal`. Incluye español e inglés. No hay base de datos, cuentas de visitantes ni un servidor separado que mantener.
+Una aplicación Next.js con dos vistas del mismo CV: una portada en `/` y una terminal inspirada en Claude Code (fondo neutro, acentos terracota y mascota ASCII) en `/terminal`. Incluye español e inglés. No hay base de datos, cuentas de visitantes ni un servidor separado que mantener.
 
 ## La estructura que tienes que conocer
 
@@ -174,6 +174,6 @@ pnpm start
 
 La web y sus comandos funcionan sin IA. El chat opcional requiere `GROQ_API_KEY` en `.env.local` durante desarrollo o en las variables del proyecto de Vercel. `GROQ_MODEL` selecciona el modelo. Nunca se debe poner una clave con prefijo `NEXT_PUBLIC_` ni subir `.env.local` a Git. Una cuota gratuita de IA tiene límites; no es uso ilimitado.
 
-Todo vive en un solo proyecto. Al desplegarlo en Vercel, las páginas y los PDF se sirven allí y la ruta `/api/chat` se ejecuta en su entorno de servidor. No hay que contratar una máquina aparte para ese pequeño backend. El fork ya está creado en [pabblo2000/claude-code-resume](https://github.com/pabblo2000/claude-code-resume). El repositorio local lo usa como `origin`; los cambios del CV siguen en local y todavía no se ha desplegado la web.
+Todo vive en un solo proyecto. Al desplegarlo en Vercel, las páginas y los PDF se sirven allí y la ruta `/api/chat` se ejecuta en su entorno de servidor. No hay que contratar una máquina aparte para ese pequeño backend. El fork ya está creado en [pabblo2000/claude-code-resume](https://github.com/pabblo2000/claude-code-resume). El repositorio local lo usa como `origin`. La web está publicada en https://pablo-alvaro-cv.vercel.app/ con el plan Hobby de Vercel; cada push a `main` genera un despliegue automático.
 
 El código adapta [Claude Resume](https://github.com/ambaena/claude-code-resume), de Alfonso Baena. Su historial está integrado en Git y `upstream` apunta al repositorio original. El código retirado sigue recuperable en ese historial; no se mantienen carpetas extra con copias de componentes sin uso.
